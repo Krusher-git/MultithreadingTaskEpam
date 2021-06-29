@@ -43,7 +43,6 @@ public class Ferry {
                 return false;
             }
             vehicles.add(vehicle);
-            TimeUnit.MILLISECONDS.sleep(500);
             int tempSquare = square.get() - vehicle.getSquare();
             int tempWeight = weight.get() - vehicle.getWeight();
             square.set(tempSquare);

@@ -29,7 +29,8 @@ public class Vehicle extends Thread {
             try {
                 TimeUnit.MILLISECONDS.sleep(500);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logger.log(Level.FATAL, "InterruptedException with " + this.toString());
+                Thread.currentThread().interrupt();
             }
             loaded = ferry.addVehicle(this);
         }
