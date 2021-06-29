@@ -8,7 +8,8 @@ public class FerryUnloadDaemon extends Thread {
 
         while (true) {
             try {
-                TimeUnit.SECONDS.sleep(2);
+                System.out.println("dasdasfasf");
+                TimeUnit.SECONDS.sleep(1);
                 Ferry ferry = Ferry.getInstance();
                 ferry.unloadFerry();
             } catch (InterruptedException e) {

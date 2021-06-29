@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +19,7 @@ public class Ferry {
     private static final AtomicInteger INITIAL_WEIGHT = new AtomicInteger(Generator.generateFerryCapacity());
     private AtomicInteger square;
     private AtomicInteger weight;
-    private Queue<Vehicle> vehicles;
+    private List<Vehicle> vehicles;
     private Lock lock = new ReentrantLock();
     private static final Logger logger = LogManager.getLogger();
     private static final Ferry instance = new Ferry();
@@ -25,38 +27,47 @@ public class Ferry {
     private Ferry() {
         square = INITIAL_SQUARE;
         weight = INITIAL_WEIGHT;
-        vehicles = new PriorityQueue<>();
+        vehicles = new LinkedList<>();
     }
 
     public static Ferry getInstance() {
         return instance;
     }
 
-    public void addVehicle(Vehicle vehicle) {
+    public boolean addVehicle(Vehicle vehicle) {
         lock.lock();
-        System.out.println("gadfaass");
+        logger.log(Level.INFO, vehicle.toString() + " is trying to get on a board");
         try {
             if (square.get() - vehicle.getSquare() < 0 || weight.get() - vehicle.getWeight() < 0) {
-                logger.log(Level.INFO, "Not enough space on a board for this " + Thread.currentThread().getName() + " vehicle");
-                return;
+                logger.log(Level.INFO, "Not enough space on a board for this " + vehicle.toString());
+                return false;
             }
             vehicles.add(vehicle);
+            TimeUnit.MILLISECONDS.sleep(500);
             int tempSquare = square.get() - vehicle.getSquare();
             int tempWeight = weight.get() - vehicle.getWeight();
             square.set(tempSquare);
             weight.set(tempWeight);
 
-//            TimeUnit.MILLISECONDS.sleep(100);
+
         } catch (Exception e) {
-            logger.log(Level.WARN, "Something goes wrong with " + Thread.currentThread().getName());
+            logger.log(Level.WARN, "Something goes wrong with " + Thread.currentThread().getName(), e);
         } finally {
             lock.unlock();
+
         }
+        return true;
     }
+
 
     public void unloadFerry() {
         try {
             lock.lock();
+            if (vehicles.isEmpty()) {
+                logger.log(Level.WARN, "There are no vehicles on a board");
+                return;
+            }
+            logger.log(Level.INFO, "Current vehicles are going to be delivered " + vehicles.toString());
             vehicles.clear();
             square.set(INITIAL_SQUARE.get());
             weight.set(INITIAL_WEIGHT.get());

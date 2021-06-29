@@ -8,7 +8,7 @@ public class Generator {
     private static final int DEFAULT_HEAVY_CAR_WEIGHT = 1000;
     private static final int DEFAULT_LIGHT_CAR_SQUARE = 10;
     private static final int DEFAULT_HEAVY_CAR_SQUARE = 30;
-    private static final int DEFAULT_FERRY_CAPACITY = 2000;
+    private static final int DEFAULT_FERRY_CAPACITY = 4000;
     private static final int DEFAULT_FERRY_SQUARE = 150;
 
     public static int generateVehicleWeight(boolean isLightCar) {
